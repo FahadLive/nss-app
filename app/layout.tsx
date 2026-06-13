@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import NotificationModal from "@/components/NotificationModal";
 
 export default function RootLayout({
     children,
@@ -43,6 +44,7 @@ export default function RootLayout({
             </head>
             <body className="min-h-dvh flex flex-col bg-surface text-on-surface">
                 <ServiceWorkerRegister />
+                <NotificationModal />
                 {children}
                 <Toaster richColors />
             </body>

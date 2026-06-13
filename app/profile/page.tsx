@@ -3,8 +3,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
-import NotificationPrompt from "@/components/NotificationPrompt";
-
 export default async function ProfilePage() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
@@ -159,7 +157,6 @@ export default async function ProfilePage() {
             </div>
           </div>
           <div className="mt-8 space-y-3">
-            <NotificationPrompt />
             <form
               action={async () => {
                 "use server";
