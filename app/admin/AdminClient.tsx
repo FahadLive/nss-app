@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
+import { approveUser, rejectUser, closeEventAction } from "./actions";
 
 interface Profile {
     id: string;
@@ -31,46 +31,23 @@ export default function AdminClient({
     allEvents: Event[];
 }) {
     const router = useRouter();
-    const supabase = createClient();
 
     const handleApprove = (userId: string) => {
-        toast.promise(
-            (async () => {
-                const result = await supabase
-                    .from("profiles")
-                    .update({ approval_status: "approved" })
-                    .eq("id", userId);
-
-                router.refresh();
-                return result;
-            })(),
-            {
-                loading: "Approving volunteer...",
-                success: "Volunteer approved",
-                error: "Failed to approve volunteer",
-            },
-        );
+        toast.promise(approveUser(userId), {
+            loading: "Approving volunteer...",
+            success: "Volunteer approved",
+            error: (e) => e.message ?? "Failed to approve volunteer",
+        });
     };
 
     const handleReject = (userId: string) => {
         if (!confirm("Reject this volunteer?")) return;
 
-        toast.promise(
-            (async () => {
-                const result = await supabase
-                    .from("profiles")
-                    .update({ approval_status: "rejected" })
-                    .eq("id", userId);
-
-                router.refresh();
-                return result;
-            })(),
-            {
-                loading: "Rejecting volunteer...",
-                success: "Volunteer rejected",
-                error: "Failed to reject volunteer",
-            },
-        );
+        toast.promise(rejectUser(userId), {
+            loading: "Rejecting volunteer...",
+            success: "Volunteer rejected",
+            error: (e) => e.message ?? "Failed to reject volunteer",
+        });
     };
 
     const copyToWhatsApp = async (title: string) => {
@@ -92,22 +69,11 @@ export default function AdminClient({
     const closeEvent = (eventId: string) => {
         if (!confirm("Close registrations for this event?")) return;
 
-        toast.promise(
-            (async () => {
-                const result = await supabase
-                    .from("events")
-                    .update({ status: "closed" })
-                    .eq("id", eventId);
-
-                router.refresh();
-                return result;
-            })(),
-            {
-                loading: "Closing event...",
-                success: "Event closed",
-                error: "Failed to close event",
-            },
-        );
+        toast.promise(closeEventAction(eventId), {
+            loading: "Closing event...",
+            success: "Event closed",
+            error: "Failed to close event",
+        });
     };
 
     return (
