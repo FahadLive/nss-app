@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { BellRing, CheckCircle } from "lucide-react";
 
 export default function NotificationPrompt() {
     const [status, setStatus] = useState<"idle" | "subscribed" | "denied">(
@@ -79,9 +80,7 @@ export default function NotificationPrompt() {
     if (status === "subscribed") {
         return (
             <button className="w-full bg-tertiary text-on-tertiary font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-xl">
-                    check_circle
-                </span>
+                <CheckCircle size={20} />
                 Notifications Enabled
             </button>
         );
@@ -92,9 +91,7 @@ export default function NotificationPrompt() {
             onClick={subscribe}
             className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
         >
-            <span className="material-symbols-outlined text-xl">
-                notifications_active
-            </span>
+            <BellRing size={20} />
             Notify me about events
         </button>
     );

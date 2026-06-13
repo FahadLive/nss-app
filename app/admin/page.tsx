@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import AdminClient from "./AdminClient";
+import { TrendingUp, HeartHandshake, CalendarDays } from "lucide-react";
 
 export default async function AdminPage() {
     const cookieStore = await cookies();
@@ -60,16 +61,12 @@ export default async function AdminPage() {
                                 12,480
                             </h2>
                             <div className="flex items-center mt-2 text-green-600 gap-1 text-xs font-bold">
-                                <span className="material-symbols-outlined text-sm">
-                                    trending_up
-                                </span>
+                                <TrendingUp size={14} />
                                 <span>+12% this month</span>
                             </div>
                         </div>
                         <div className="absolute -right-4 -bottom-4 opacity-5">
-                            <span className="material-symbols-outlined text-[120px]">
-                                volunteer_activism
-                            </span>
+                            <HeartHandshake size={120} />
                         </div>
                     </div>
                     <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant card-shadow">
@@ -96,9 +93,7 @@ export default async function AdminPage() {
                             {liveEvents ?? 0}
                         </h2>
                         <div className="flex items-center mt-4 text-on-surface-variant text-xs">
-                            <span className="material-symbols-outlined text-sm mr-1">
-                                event
-                            </span>
+                            <CalendarDays size={14} className="mr-1" />
                             Managing all active listings
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useNotif } from "@/components/NotifContext";
+import { Bell, BellRing } from "lucide-react";
 
 const DISMISS_KEY = "notification_modal_dismissed_at";
 const DISMISS_DAYS = 7;
@@ -101,9 +102,7 @@ export default function NotificationModal() {
       <div className="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-8 max-w-sm w-full animate-in fade-in zoom-in-95">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-fixed rounded-full mb-5">
-            <span className="material-symbols-outlined text-[36px] text-primary">
-              notifications
-            </span>
+            <Bell size={36} className="text-primary" />
           </div>
           <h2 className="text-2xl font-bold text-on-surface mb-2">
             Stay Updated
@@ -119,7 +118,7 @@ export default function NotificationModal() {
             disabled={loading}
             className="w-full h-12 bg-primary text-on-primary rounded-xl font-bold text-sm uppercase tracking-wider shadow-lg hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-xl">notifications_active</span>
+            <BellRing size={20} />
             {loading ? "Enabling..." : "Enable Notifications"}
           </button>
           <button

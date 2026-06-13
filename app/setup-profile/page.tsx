@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { ClipboardEdit } from "lucide-react";
 
 const DEPARTMENTS = [
   "Computer Science and Engineering (CSE)",
@@ -70,9 +71,7 @@ export default function SetupProfilePage() {
       <div className="w-full max-w-md bg-surface-container-lowest rounded-xl border border-outline-variant p-8 shadow-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-fixed rounded-full mb-4">
-            <span className="material-symbols-outlined text-[32px] text-primary">
-              assignment
-            </span>
+            <ClipboardEdit size={32} className="text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-on-surface mb-2">
             Complete Your Profile

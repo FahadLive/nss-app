@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { Copy, CheckCircle, UserPlus, UserMinus } from "lucide-react";
 
 interface Participant {
   volunteer_id: string;
@@ -81,9 +82,7 @@ export default function EventDetailClient({
             onClick={copyWhatsapp}
             className="w-full flex items-center justify-center gap-2 bg-on-tertiary-fixed text-white py-3 rounded-lg text-xs font-bold hover:bg-tertiary-container transition-colors"
           >
-            <span className="material-symbols-outlined text-base">
-              content_copy
-            </span>
+            <Copy size={16} />
             WhatsApp Format
           </button>
         </div>
@@ -115,9 +114,7 @@ export default function EventDetailClient({
                     Volunteer
                   </p>
                 </div>
-                <span className="material-symbols-outlined text-outline-variant">
-                  check_circle
-                </span>
+                <CheckCircle size={20} className="text-outline-variant" />
               </li>
             ))}
             {participants.length === 0 && (
@@ -134,9 +131,7 @@ export default function EventDetailClient({
           disabled={loading}
           className={`flex-grow ${joined ? "bg-outline opacity-80" : "bg-secondary"} text-on-secondary h-14 rounded-xl font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50`}
         >
-          <span className="material-symbols-outlined">
-            {joined ? "person_remove" : "person_add"}
-          </span>
+          {joined ? <UserMinus size={24} /> : <UserPlus size={24} />}
           <span>{joined ? "Leave Event" : "Join Event"}</span>
         </button>
       </footer>

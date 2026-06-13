@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Calendar, Users } from "lucide-react";
 
 interface Event {
   id: string;
@@ -58,13 +59,11 @@ export default function EventCard({ event }: EventCardProps) {
       <div className="p-5 flex-grow">
         <h4 className="text-xl font-bold text-primary mb-2">{event.title}</h4>
         <div className="flex items-center gap-2 text-on-surface-variant mb-4 text-sm">
-          <span className="material-symbols-outlined text-lg">
-            calendar_today
-          </span>
+          <Calendar size={20} />
           <span>{dateStr}</span>
         </div>
         <div className="flex items-center gap-2 text-on-surface-variant mb-6 text-sm">
-          <span className="material-symbols-outlined text-lg">group</span>
+          <Users size={20} />
           <span>
             {registered} / {event.max_slots} Volunteers Joined
           </span>

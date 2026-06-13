@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import TopAppBar from "@/components/TopAppBar";
 import EventDetailClient from "./EventDetailClient";
+import { HeartHandshake, Calendar, MapPin, Timer } from "lucide-react";
 
 export default async function EventDetailPage({
   params,
@@ -61,9 +62,7 @@ export default async function EventDetailPage({
             />
           ) : (
             <div className="w-full h-full bg-primary-container flex flex-col items-center justify-center gap-4 text-on-primary-container">
-              <span className="material-symbols-outlined text-6xl opacity-40">
-                volunteer_activism
-              </span>
+              <HeartHandshake size={64} className="opacity-40" />
               <span className="text-xs uppercase tracking-widest opacity-60">
                 NSS Event Banner
               </span>
@@ -82,9 +81,7 @@ export default async function EventDetailPage({
           </h2>
           <div className="flex flex-wrap gap-4 text-on-surface-variant text-sm mb-4">
             <div className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-base">
-                calendar_today
-              </span>
+              <Calendar size={16} />
               <span>
                 {new Date(event.event_date).toLocaleDateString("en-US", {
                   weekday: "long",
@@ -98,16 +95,14 @@ export default async function EventDetailPage({
             </div>
             {event.location && (
               <div className="flex items-center gap-1">
-                <span className="material-symbols-outlined text-base">
-                  location_on
-                </span>
+                <MapPin size={16} />
                 <span>{event.location}</span>
               </div>
             )}
           </div>
           {event.registration_deadline && (
             <div className="flex items-center gap-1 text-secondary font-bold text-sm mb-6">
-              <span className="material-symbols-outlined text-base">timer</span>
+              <Timer size={16} />
               <span>
                 Registration Closes:{" "}
                 {new Date(event.registration_deadline).toLocaleDateString(

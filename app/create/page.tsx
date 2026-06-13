@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
+import { ImagePlus, Send } from "lucide-react";
 
 export default function CreateListingPage() {
   const router = useRouter();
@@ -190,9 +191,7 @@ export default function CreateListingPage() {
             </div>
             {activeTab === "poster" ? (
               <label className="relative group cursor-pointer border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center bg-white hover:border-primary transition-colors h-48 overflow-hidden">
-                <span className="material-symbols-outlined text-4xl text-outline-variant mb-2">
-                  add_photo_alternate
-                </span>
+                <ImagePlus size={36} className="text-outline-variant mb-2" />
                 <p className="text-sm text-on-surface-variant">
                   Upload event banner
                 </p>
@@ -259,12 +258,7 @@ export default function CreateListingPage() {
             className="w-full h-14 bg-secondary text-white font-bold rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-8 disabled:opacity-50"
             type="submit"
           >
-            <span
-              className="material-symbols-outlined"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              send
-            </span>
+            <Send fill="currentColor" />
             {loading ? "PUBLISHING..." : "PUBLISH LISTING"}
           </button>
         </form>

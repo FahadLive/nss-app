@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import EventCard from "@/components/EventCard";
+import { History } from "lucide-react";
 
 export default async function HomePage() {
     const cookieStore = await cookies();
@@ -86,9 +87,7 @@ export default async function HomePage() {
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 bg-surface-container-highest rounded flex items-center justify-center text-on-surface-variant">
-                                            <span className="material-symbols-outlined">
-                                                history
-                                            </span>
+                                            <History size={24} />
                                         </div>
                                         <div>
                                             <h5 className="font-bold text-on-surface-variant">

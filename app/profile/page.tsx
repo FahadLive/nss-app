@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import TopAppBar from "@/components/TopAppBar";
 import BottomNavBar from "@/components/BottomNavBar";
+import { ShieldCheck, Check, Hourglass, XCircle, CheckCircle, User } from "lucide-react";
 export default async function ProfilePage() {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
@@ -26,9 +27,7 @@ export default async function ProfilePage() {
                     <>
                         <div className="text-center mb-10">
                             <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-fixed rounded-full mb-6">
-                                <span className="material-symbols-outlined text-[40px] text-primary">
-                                    verified_user
-                                </span>
+                                <ShieldCheck size={40} className="text-primary" />
                             </div>
                             <h2 className="text-2xl font-bold text-on-surface mb-3">
                                 Awaiting approval.
@@ -54,9 +53,7 @@ export default async function ProfilePage() {
                                 <div className="flex gap-4">
                                     <div className="flex flex-col items-center">
                                         <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white">
-                                            <span className="material-symbols-outlined text-sm">
-                                                check
-                                            </span>
+                                            <Check size={14} />
                                         </div>
                                         <div className="w-0.5 h-full bg-primary" />
                                     </div>
@@ -72,15 +69,7 @@ export default async function ProfilePage() {
                                 <div className="flex gap-4">
                                     <div className="flex flex-col items-center">
                                         <div className="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center text-primary bg-surface">
-                                            <span
-                                                className="material-symbols-outlined text-sm"
-                                                style={{
-                                                    fontVariationSettings:
-                                                        "'FILL' 1",
-                                                }}
-                                            >
-                                                hourglass_top
-                                            </span>
+                                                <Hourglass size={14} fill="currentColor" />
                                         </div>
                                     </div>
                                     <div>
@@ -100,9 +89,7 @@ export default async function ProfilePage() {
                 {profile?.approval_status === "rejected" && (
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center justify-center w-20 h-20 bg-error-container rounded-full mb-6">
-                            <span className="material-symbols-outlined text-[40px] text-on-error-container">
-                                cancel
-                            </span>
+                            <XCircle size={40} className="text-on-error-container" />
                         </div>
                         <h2 className="text-2xl font-bold text-on-surface mb-3">
                             Registration Rejected
@@ -116,9 +103,7 @@ export default async function ProfilePage() {
                 {profile?.approval_status === "approved" && (
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
-                            <span className="material-symbols-outlined text-[40px] text-green-600">
-                                verified
-                            </span>
+                            <CheckCircle size={40} className="text-green-600" />
                         </div>
                         <h2 className="text-2xl font-bold text-on-surface mb-3">
                             Approved Volunteer
@@ -137,9 +122,7 @@ export default async function ProfilePage() {
                         <div className="col-span-2 bg-white/80 backdrop-blur p-5 rounded-xl border border-outline-variant">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center text-primary">
-                                    <span className="material-symbols-outlined">
-                                        person
-                                    </span>
+                                    <User size={24} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-on-surface-variant">

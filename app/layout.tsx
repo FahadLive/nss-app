@@ -60,10 +60,6 @@ export default function RootLayout({
             className={`${playfair.variable} ${publicSans.variable}`}
         >
             <head>
-                <link
-                    rel="stylesheet"
-                    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-                />
                 <meta name="apple-mobile-web-app-title" content="NSS GECP" />
                 <link
                     rel="apple-touch-icon"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Home, Users, UserCircle } from "lucide-react";
 
 interface BottomNavBarProps {
     activeTab?: "home" | "admin" | "profile";
@@ -14,13 +15,13 @@ export default function BottomNavBar({
     const router = useRouter();
 
     const tabs = [
-        { key: "home", label: "Home", icon: "home", path: "/" },
+        { key: "home", label: "Home", Icon: Home, path: "/" },
         ...(isAdmin
             ? [
                   {
                       key: "admin" as const,
                       label: "Admin",
-                      icon: "diversity_1",
+                      Icon: Users,
                       path: "/admin",
                   },
               ]
@@ -28,7 +29,7 @@ export default function BottomNavBar({
         {
             key: "profile",
             label: "Profile",
-            icon: "account_circle",
+            Icon: UserCircle,
             path: "/profile",
         },
     ];
@@ -47,14 +48,10 @@ export default function BottomNavBar({
                                 : "text-on-surface-variant hover:text-primary"
                         }`}
                     >
-                        <span
-                            className="material-symbols-outlined"
-                            style={{
-                                fontVariationSettings: `'FILL' ${isActive ? 1 : 0}`,
-                            }}
-                        >
-                            {tab.icon}
-                        </span>
+                        <tab.Icon
+                            size={24}
+                            fill={isActive ? "currentColor" : "none"}
+                        />
                         <span className="text-xs font-bold">{tab.label}</span>
                     </button>
                 );

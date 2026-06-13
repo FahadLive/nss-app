@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { approveUser, rejectUser, closeEventAction } from "./actions";
+import { Plus, Users, Copy } from "lucide-react";
 
 interface Profile {
     id: string;
@@ -156,7 +157,7 @@ export default function AdminClient({
                         onClick={() => router.push("/create")}
                         className="bg-primary-container text-on-primary-container p-2 rounded-full flex items-center justify-center"
                     >
-                        <span className="material-symbols-outlined">add</span>
+                        <Plus size={24} />
                     </button>
                 </div>
                 <div className="space-y-6">
@@ -190,9 +191,7 @@ export default function AdminClient({
                                         {l.title}
                                     </h4>
                                     <div className="flex items-center text-xs text-on-surface-variant mb-4">
-                                        <span className="material-symbols-outlined text-sm mr-1">
-                                            group
-                                        </span>
+                                        <Users size={14} className="mr-1" />
                                         {registered} / {l.max_slots} Registered
                                     </div>
                                     <div className="flex gap-3">
@@ -202,9 +201,7 @@ export default function AdminClient({
                                             }
                                             className="flex-1 flex items-center justify-center gap-2 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-primary hover:bg-primary-fixed"
                                         >
-                                            <span className="material-symbols-outlined text-lg">
-                                                content_copy
-                                            </span>
+                                            <Copy size={20} />
                                             WhatsApp
                                         </button>
                                         {l.status === "active" && (

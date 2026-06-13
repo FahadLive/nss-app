@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
+import { Info } from "lucide-react";
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
@@ -83,9 +84,7 @@ export default function LoginPage() {
                             </button>
                             <div className="bg-surface-container-low border border-outline-variant/50 rounded-xl p-5">
                                 <div className="flex gap-3 items-start">
-                                    <span className="material-symbols-outlined text-secondary">
-                                        info
-                                    </span>
+                                    <Info className="text-secondary" size={20} />
                                     <div>
                                         <h3 className="text-sm font-bold text-on-surface mb-1">
                                             New Volunteers
