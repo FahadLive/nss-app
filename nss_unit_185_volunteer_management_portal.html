@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>NSS Unit 185 - Volunteer Management Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#181c20",
+                        "on-surface-variant": "#444651",
+                        "on-tertiary-container": "#afb1b2",
+                        "secondary": "#b62417",
+                        "primary-container": "#1b3f8b",
+                        "on-secondary-container": "#5c0000",
+                        "on-secondary-fixed-variant": "#930201",
+                        "secondary-container": "#fd5743",
+                        "on-primary-container": "#91aeff",
+                        "surface-container": "#ebeef3",
+                        "inverse-on-surface": "#eef1f6",
+                        "on-primary-fixed-variant": "#20438f",
+                        "on-primary-fixed": "#001848",
+                        "surface": "#f7f9ff",
+                        "outline": "#747782",
+                        "surface-tint": "#3b5ba8",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "surface-bright": "#f7f9ff",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb4a8",
+                        "secondary-fixed": "#ffdad4",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#2b2e2f",
+                        "surface-container-high": "#e5e8ee",
+                        "inverse-primary": "#b2c5ff",
+                        "on-tertiary-fixed": "#191c1d",
+                        "on-surface": "#181c20",
+                        "surface-container-low": "#f1f4f9",
+                        "outline-variant": "#c4c6d3",
+                        "tertiary-container": "#414445",
+                        "background": "#f7f9ff",
+                        "surface-dim": "#d7dadf",
+                        "on-secondary": "#ffffff",
+                        "primary": "#00286d",
+                        "on-tertiary-fixed-variant": "#454748",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#dae2ff",
+                        "tertiary-fixed-dim": "#c5c7c8",
+                        "surface-variant": "#e0e3e8",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e0e3e8",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#410000",
+                        "inverse-surface": "#2d3135",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e1e3e4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "gutter": "16px",
+                        "container-margin": "20px",
+                        "touch-target-min": "48px"
+                    },
+                    "fontFamily": {
+                        "playfair": ["Playfair Display", "serif"],
+                        "public": ["Public Sans", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Public Sans', sans-serif; background-color: #f7f9ff; }
+        h1, h2, h3, h4, .font-playfair { font-family: 'Playfair Display', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .card-shadow { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); transition: box-shadow 0.2s; }
+        .card-shadow:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+        .status-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .nss-gradient { background: linear-gradient(135deg, #00286d 0%, #1b3f8b 100%); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Shared Components ---
+
+        const TopAppBar = ({ title = "NSS Unit 185", showBack = false, isAdmin = false }) => {
+            const navigate = useNavigate();
+            return (
+                <header className="fixed top-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim shadow-sm flex justify-between items-center h-16 px-container-margin">
+                    <div className="flex items-center gap-3">
+                        {showBack && (
+                            <button onClick={() => navigate(-1)} className="material-symbols-outlined text-primary p-2 active:scale-95 transition-transform">arrow_back</button>
+                        )}
+                        <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+                            {isAdmin ? (
+                                <span className="material-symbols-outlined text-white">admin_panel_settings</span>
+                            ) : (
+                                <img alt="Member profile photo" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEXDh4KPV-LEtaK0hqXnVOF1nNd91ld_66c10PSX4exmQMxqX3g2xrnE7K8fgMRsNhR5G72IjolPvhrEmXvElh87GHitiEzzyeXBO3wT94YYp9aWUUU-1A20tzeU125u72rjdJxcEfEiZn7AlFYVytaFBJfXzr7syF_iXtapuvWeci_ldCV-3DhEXs8iIeBPgwQbqmgC_4Iil_vCZbyUa2Mm-JR5KShsT7g9XnU6VmhxM3UjpO1fkk0Q" />
+                            )}
+                        </div>
+                        <h1 className="text-xl font-bold text-primary dark:text-primary-fixed">{title}</h1>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button className="material-symbols-outlined text-primary dark:text-primary-fixed p-2 hover:bg-surface-container-low transition-colors rounded-full">
+                            notifications
+                        </button>
+                    </div>
+                </header>
+            );
+        };
+
+        const BottomNavBar = ({ activeTab = "home" }) => {
+            const navigate = useNavigate();
+            return (
+                <nav className="fixed bottom-0 left-0 w-full z-50 bg-surface dark:bg-surface-dim border-t border-outline-variant dark:border-outline shadow-lg flex justify-around items-center h-20 px-2 pb-2">
+                    <button onClick={() => navigate('/')} className={`flex flex-col items-center justify-center rounded-full px-5 py-1 active:scale-90 transition-all ${activeTab === 'home' ? 'bg-secondary-container dark:bg-secondary-fixed text-on-secondary-container' : 'text-on-surface-variant hover:text-primary'}`}>
+                        <span className="material-symbols-outlined" style={{ fontVariationSettings: `'FILL' ${activeTab === 'home' ? 1 : 0}` }}>home</span>
+                        <span className="text-xs font-bold">Home</span>
+                    </button>
+                    <button onClick={() => navigate('/admin')} className={`flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all ${activeTab === 'impact' ? 'text-primary' : ''}`}>
+                        <span className="material-symbols-outlined">diversity_1</span>
+                        <span className="text-xs font-bold">Admin</span>
+                    </button>
+                    <button onClick={() => navigate('/profile-pending')} className={`flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-90 transition-all ${activeTab === 'profile' ? 'text-primary' : ''}`}>
+                        <span className="material-symbols-outlined">account_circle</span>
+                        <span className="text-xs font-bold">Profile</span>
+                    </button>
+                </nav>
+            );
+        };
+
+        // --- Screen 1: Home/Listings ---
+        const HomePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="min-h-screen">
+                    <TopAppBar />
+                    <main className="pt-20 pb-24 px-container-margin max-w-5xl mx-auto">
+                        <section className="mb-8">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-2xl font-bold text-on-surface">Active Listings</h3>
+                                <span className="text-xs text-secondary font-bold">LIVE NOW</span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {[
+                                    { id: 1, title: "Yoga Class - Day 6", date: "Oct 24, 2023 • 07:00 AM", slots: "42 / 50", urgent: true, img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQcCtVyXC4gejmPqr8xp058Lb4N15aZHSKrA9oaEoeSBYfFEqhbSY5bLOYiHcURGw_m6jXN_EgI-phWY2t0eZhkwrcGaNDJswVscLVVbEw4SFDewKgzixZR66LXNGNe20Orrs7dZPvLeaJySSnCZNKqYLUPUiAHn_Z8GPMHYIqTgWzvhNtCXF6idK_ejqaU-QXpNY1u2uZRO4HKEIWHmq7Y3Ux7elb-x2IBLGI-lK2NSrYuwNQDKewqQ" },
+                                    { id: 2, title: "Food Drive: Metro North", date: "Oct 25, 2023 • 09:30 AM", slots: "15 / 30", type: "MORNING", icon: "restaurant" },
+                                    { id: 3, title: "Green Campus Drive", date: "Oct 26, 2023 • 10:00 AM", slots: "28 / 60", type: "OUTDOOR", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAOe70NkYb6INuR_zSqjmJh9XuJNGR43WUyBKSF-LS8p-xkLI_mFkcecOv3qZETqE-eT-Whqeemem6fsEYQjHJcRci7Kxc8Ny1NXVUZWduXJmCz6UpsDwutMzzlup06PO18w5jsSLK6vbYIPJSvLR_AH91JsHlJkCsgWjTfTMzPiO4NSGXwIaxvzvg435vD_l7niETDY_A9o5dMNmbAx1KEd9pWmmztr8NYQ5b-P9_BzYHXKGuyOfQA3w" }
+                                ].map((item) => (
+                                    <div key={item.id} onClick={() => navigate(`/event/${item.id}`)} className="cursor-pointer bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden card-shadow flex flex-col transition-transform active:scale-[0.98]">
+                                        <div className="relative h-40 bg-surface-dim">
+                                            {item.img ? (
+                                                <img className="w-full h-full object-cover" src={item.img} />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-primary-container/20">
+                                                    <span className="material-symbols-outlined text-primary opacity-40 text-5xl">{item.icon}</span>
+                                                </div>
+                                            )}
+                                            {item.urgent && <span className="absolute top-3 right-3 bg-secondary/10 text-secondary px-3 py-1 rounded text-xs font-bold uppercase backdrop-blur-md border border-secondary/20">URGENT</span>}
+                                            {item.type && <span className="absolute top-3 right-3 bg-primary/10 text-primary px-3 py-1 rounded text-xs font-bold uppercase backdrop-blur-md border border-primary/20">{item.type}</span>}
+                                        </div>
+                                        <div className="p-5 flex-grow">
+                                            <h4 className="text-xl font-bold text-primary mb-2">{item.title}</h4>
+                                            <div className="flex items-center gap-2 text-on-surface-variant mb-4 text-sm">
+                                                <span className="material-symbols-outlined text-lg">calendar_today</span>
+                                                <span>{item.date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-on-surface-variant mb-6 text-sm">
+                                                <span className="material-symbols-outlined text-lg">group</span>
+                                                <span>{item.slots} Volunteers Joined</span>
+                                            </div>
+                                            <button className="w-full bg-secondary text-on-secondary py-3 rounded text-sm font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-md">
+                                                Join Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section>
+                            <div className="flex items-center gap-3 mb-6">
+                                <h3 className="text-2xl font-bold text-on-surface">Closed Listings</h3>
+                                <div className="h-px flex-grow bg-outline-variant"></div>
+                            </div>
+                            <div className="space-y-4">
+                                {[
+                                    { title: "Clean-up Drive - Sector 4", date: "Oct 20, 2023", volunteers: 84 },
+                                    { title: "Blood Donation Camp", date: "Oct 18, 2023", volunteers: 112 }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="bg-surface-container-low border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between opacity-80 gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-surface-container-highest rounded flex items-center justify-center text-on-surface-variant">
+                                                <span className="material-symbols-outlined">history</span>
+                                            </div>
+                                            <div>
+                                                <h5 className="font-bold text-on-surface-variant">{item.title}</h5>
+                                                <p className="text-xs text-on-surface-variant">Completed on {item.date}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between sm:justify-end gap-6">
+                                            <div className="text-right">
+                                                <span className="block text-sm font-bold text-on-surface-variant">{item.volunteers} Volunteers</span>
+                                                <span className="block text-xs text-secondary">Success</span>
+                                            </div>
+                                            <button className="border border-primary text-primary px-4 py-2 rounded text-xs font-bold uppercase tracking-wide hover:bg-primary/5">
+                                                Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </main>
+                    <BottomNavBar activeTab="home" />
+                </div>
+            );
+        };
+
+        // --- Screen 2: Create Listing ---
+        const CreateListingPage = () => {
+            const navigate = useNavigate();
+            const [activeTab, setActiveTab] = useState('poster');
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                alert('Listing successfully published to Unit 185!');
+                navigate('/');
+            };
+
+            return (
+                <div className="bg-surface min-h-screen pb-24">
+                    <TopAppBar title="Create Listing" showBack />
+                    <main className="px-container-margin py-20 max-w-xl mx-auto">
+                        <form className="space-y-6" onSubmit={handleSubmit}>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-on-surface-variant" htmlFor="event-title">Listing Title *</label>
+                                <input className="w-full h-12 px-4 rounded border border-outline-variant focus:ring-primary focus:border-primary outline-none transition-all text-sm bg-white" id="event-title" placeholder="e.g., Yoga Class - Day 6" required type="text"/>
+                            </div>
+
+                            <div className="space-y-4">
+                                <label className="text-sm font-bold text-on-surface-variant">Visual Representation</label>
+                                <div className="flex p-1 bg-surface-container rounded-xl gap-1">
+                                    <button type="button" onClick={() => setActiveTab('poster')} className={`flex-1 py-2 rounded-lg text-sm transition-all ${activeTab === 'poster' ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'}`}>
+                                        Add Poster Image
+                                    </button>
+                                    <button type="button" onClick={() => setActiveTab('emoji')} className={`flex-1 py-2 rounded-lg text-sm transition-all ${activeTab === 'emoji' ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'}`}>
+                                        Use Emoji Icon
+                                    </button>
+                                </div>
+                                {activeTab === 'poster' ? (
+                                    <div className="relative group cursor-pointer border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center bg-white hover:border-primary transition-colors h-48 overflow-hidden">
+                                        <img className="absolute inset-0 w-full h-full object-cover opacity-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmMawZ5qbNncDgOJehGpKH5vH55RysKc4RUDZJRAKbGtuzR-Nu1ZTwH8kbMMhxCFjgcWHu5qz_KDyJFg_tY1X8rMtyFEdkXDQr6DC6KZTZ__awHJV8mI6Q90krF4UkCgUDivDbuF00DlXgZKTrElWWj08sO3GRYu6faSn-wXVErxvMGzCSTH8z3uIPo3aknji7TglfTMSBX4DfAMrC8DrPPGsnwq3QeyQeFM9X32ku8Q6lc8UsHOHs-w" />
+                                        <span className="material-symbols-outlined text-4xl text-outline-variant mb-2">add_photo_alternate</span>
+                                        <p className="text-sm text-on-surface-variant">Upload event banner</p>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-5 gap-3 p-4 bg-white rounded-xl border border-outline-variant shadow-sm">
+                                        {['🧘', '🩸', '🧹', '🌳', '🍱', '📚', '🏥', '🎨', '🚲', '🤝'].map(e => (
+                                            <button key={e} type="button" className="aspect-square flex items-center justify-center text-3xl border border-transparent hover:border-secondary hover:bg-secondary-fixed rounded-lg transition-all active:scale-90">{e}</button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-3">
+                                <label className="text-sm font-bold text-on-surface-variant">Who can manage this listing?</label>
+                                <div className="space-y-2">
+                                    {['Execom Only', 'Specific Volunteers', 'Open to All'].map((opt, i) => (
+                                        <label key={opt} className="flex items-center p-4 rounded-xl border border-outline-variant bg-white cursor-pointer hover:bg-surface-container-low transition-colors group">
+                                            <input defaultChecked={i === 0} className="w-5 h-5 text-primary focus:ring-primary border-outline-variant" name="perm" type="radio" />
+                                            <div className="ml-4">
+                                                <p className="text-sm font-bold text-on-surface">{opt}</p>
+                                                <p className="text-xs text-on-surface-variant">Manage event visibility and registration.</p>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <button className="w-full h-14 bg-secondary text-white font-bold rounded-xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-8" type="submit">
+                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>send</span>
+                                PUBLISH LISTING
+                            </button>
+                        </form>
+                    </main>
+                    <BottomNavBar activeTab="home" />
+                </div>
+            );
+        };
+
+        // --- Screen 3: Admin Dashboard ---
+        const AdminDashboard = () => {
+            const navigate = useNavigate();
+            const copyToWhatsApp = (title) => {
+                const text = `🔴 *NSS UNIT 185 EVENT ALERT* 🔴\n\nEvent: *${title}*\n\nCheck details and register now!`;
+                navigator.clipboard.writeText(text);
+                alert(`Copied listing for "${title}"`);
+            };
+
+            return (
+                <div className="min-h-screen bg-background pb-24 md:pb-0 pt-16">
+                    <TopAppBar title="Admin Panel" isAdmin />
+                    <main className="max-w-7xl mx-auto px-container-margin py-8">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                            <div className="md:col-span-2 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant card-shadow flex flex-col justify-between relative overflow-hidden">
+                                <div className="relative z-10">
+                                    <p className="text-xs text-on-surface-variant mb-1 uppercase tracking-wider font-bold">Total Impact Hours</p>
+                                    <h2 className="text-4xl font-bold text-primary">12,480</h2>
+                                    <div className="flex items-center mt-2 text-green-600 gap-1 text-xs font-bold">
+                                        <span className="material-symbols-outlined text-sm">trending_up</span>
+                                        <span>+12% this month</span>
+                                    </div>
+                                </div>
+                                <div className="absolute -right-4 -bottom-4 opacity-5">
+                                    <span className="material-symbols-outlined text-[120px]">volunteer_activism</span>
+                                </div>
+                            </div>
+                            <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant card-shadow">
+                                <p className="text-xs font-bold text-on-surface-variant mb-1 uppercase">Active Volunteers</p>
+                                <h2 className="text-3xl font-bold text-secondary">428</h2>
+                                <div className="w-full bg-surface-container-high h-1.5 rounded-full mt-4">
+                                    <div className="bg-secondary h-1.5 rounded-full w-[85%]"></div>
+                                </div>
+                            </div>
+                            <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant card-shadow">
+                                <p className="text-xs font-bold text-on-surface-variant mb-1 uppercase">Live Events</p>
+                                <h2 className="text-3xl font-bold text-primary">14</h2>
+                                <div className="flex items-center mt-4 text-on-surface-variant text-xs">
+                                    <span className="material-symbols-outlined text-sm mr-1">event</span>
+                                    6 ending this week
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            <section className="lg:col-span-7">
+                                <div className="flex justify-between items-end mb-6">
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-on-surface">Pending Approvals</h3>
+                                        <p className="text-sm text-on-surface-variant">Review and verify new registrations.</p>
+                                    </div>
+                                    <span className="bg-error-container text-on-error-container px-3 py-1 rounded-full text-xs font-bold">12 NEW</span>
+                                </div>
+                                <div className="space-y-4">
+                                    {[
+                                        { name: "Aditi Sharma", dept: "CSE", yr: "Year 2", initial: "AS", bg: "bg-primary-fixed" },
+                                        { name: "Rahul Kumar", dept: "MECH", yr: "Year 1", initial: "RK", bg: "bg-secondary-fixed" }
+                                    ].map((v, i) => (
+                                        <div key={i} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 card-shadow hover:shadow-md">
+                                            <div className="flex items-center gap-4 w-full md:w-auto">
+                                                <div className={`w-12 h-12 rounded-full ${v.bg} flex items-center justify-center font-bold text-primary`}>
+                                                    {v.initial}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-on-surface">{v.name}</h4>
+                                                    <div className="flex gap-2 text-xs text-on-surface-variant">
+                                                        <span>{v.dept}</span><span>•</span><span>{v.yr}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2 w-full md:w-auto">
+                                                <button className="flex-1 md:flex-none px-4 py-2 border border-error text-error rounded-lg font-bold hover:bg-error-container transition-colors">Reject</button>
+                                                <button className="flex-1 md:flex-none px-6 py-2 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90">Approve</button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            <aside className="lg:col-span-5">
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-2xl font-bold text-on-surface">Listing Management</h3>
+                                    <button onClick={() => navigate('/create')} className="bg-primary-container text-on-primary-container p-2 rounded-full flex items-center justify-center">
+                                        <span className="material-symbols-outlined">add</span>
+                                    </button>
+                                </div>
+                                <div className="space-y-6">
+                                    {[
+                                        { title: "Old Age Home Visit - Dec 24", reg: "42/50", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDNONBcKhT11xTgvaxdk34ppR4G6tGsL6XY0nNxAo1WoCT-G1BFm6jYPQZyrwNt17zmiocazo9swnJaGoJQ8tZ-UP0NAaFTU20O6ZxZROvYw4fw9NwdnNfZQSVUcvz0vZYwuJTdR5v-zwDi_42O_iSI1WFbcIRZilPBaq8MfxcraOY3tkIiGyfGYi-R-L8jVFhOjxfhIhLguuinDFP40U7vqkCwzqK8yuUOM97vCYVFUbVX6AuACht_ow" },
+                                        { title: "Beach Cleanup Drive", reg: "115", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuB-6mpwDUWO1fLVy_NluL-DBqqOX2h5jhm2GETHL-Xd40kHGEphw7MOs_dgEXm_FCNHYtLbCZQYu0uxFaLW2QCisC0Tlrg9-vnSTKdj_nnGQbCebclUv4EiZsy8CovEQyMkEL6QPWTp0ACO-yeUgPKBpcQd6rOmSF8e11z9FreUMcbyWgObviJs4L3aURWEkofhh8FurNgM2ZGxgWaWstyI7V1Q1ntbHTJjEbZnAvU0m0agSQkqYwBs-w" }
+                                    ].map((l, i) => (
+                                        <div key={i} className="group relative bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant">
+                                            <div className="h-24 bg-cover bg-center relative" style={{ backgroundImage: `url(${l.img})` }}>
+                                                <div className="absolute inset-0 bg-black/40"></div>
+                                                <span className="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tighter">Active</span>
+                                            </div>
+                                            <div className="p-4">
+                                                <h4 className="font-bold text-on-surface mb-1">{l.title}</h4>
+                                                <div className="flex items-center text-xs text-on-surface-variant mb-4">
+                                                    <span className="material-symbols-outlined text-sm mr-1">group</span>
+                                                    {l.reg} Registered
+                                                </div>
+                                                <div className="flex gap-3">
+                                                    <button onClick={() => copyToWhatsApp(l.title)} className="flex-1 flex items-center justify-center gap-2 py-2 bg-surface-container-highest rounded-lg text-xs font-bold text-primary hover:bg-primary-fixed">
+                                                        <span className="material-symbols-outlined text-lg">content_copy</span>
+                                                        WhatsApp
+                                                    </button>
+                                                    <button className="px-4 py-2 bg-on-surface text-surface rounded-lg text-xs font-bold">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </aside>
+                        </div>
+                    </main>
+                    <BottomNavBar activeTab="impact" />
+                </div>
+            );
+        };
+
+        // --- Screen 4: Login ---
+        const LoginPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div className="bg-surface text-on-surface min-h-screen flex flex-col">
+                    <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 px-container-margin h-16 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-primary text-[28px]">account_balance</span>
+                            <div className="flex flex-col leading-tight">
+                                <span className="text-lg font-bold text-primary tracking-tight">NSS Unit 185</span>
+                                <span className="text-[10px] uppercase tracking-widest text-secondary font-bold">Not Me But You</span>
+                            </div>
+                        </div>
+                    </header>
+                    <main className="flex-grow flex flex-col md:flex-row pt-16">
+                        <section className="relative w-full md:w-1/2 min-h-[353px] md:min-h-0 bg-primary-container flex items-center justify-center text-white overflow-hidden p-12">
+                             <div className="text-center z-10">
+                                <h1 className="text-5xl font-bold mb-4">Not Me, But You.</h1>
+                                <p className="text-xl opacity-80">Empowering youth through community service since 1969.</p>
+                             </div>
+                             <div className="absolute inset-0 bg-black/20"></div>
+                             <img className="absolute inset-0 w-full h-full object-cover opacity-30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmMawZ5qbNncDgOJehGpKH5vH55RysKc4RUDZJRAKbGtuzR-Nu1ZTwH8kbMMhxCFjgcWHu5qz_KDyJFg_tY1X8rMtyFEdkXDQr6DC6KZTZ__awHJV8mI6Q90krF4UkCgUDivDbuF00DlXgZKTrElWWj08sO3GRYu6faSn-wXVErxvMGzCSTH8z3uIPo3aknji7TglfTMSBX4DfAMrC8DrPPGsnwq3QeyQeFM9X32ku8Q6lc8UsHOHs-w" />
+                        </section>
+                        <section className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-12 nss-gradient">
+                            <div className="w-full max-w-md bg-white rounded-xl border border-outline-variant p-8 shadow-sm transition-all hover:shadow-lg">
+                                <div className="text-center mb-8">
+                                    <h1 className="text-3xl font-bold text-on-surface mb-2">Join the Movement</h1>
+                                    <p className="text-on-surface-variant">Sign in to start your journey of service.</p>
+                                </div>
+                                <div className="space-y-6">
+                                    <button onClick={() => navigate('/')} className="w-full h-14 flex items-center justify-center gap-3 bg-white border border-outline hover:bg-surface-container transition-all active:scale-95 rounded-full px-6 shadow-sm group">
+                                        <svg className="w-6 h-6" viewBox="0 0 24 24">
+                                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                                            <path d="M5.84 14.09c-.22-.67-.35-1.39-.35-2.09s.13-1.42.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+                                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+                                        </svg>
+                                        <span className="font-bold text-on-surface">Continue with Google</span>
+                                    </button>
+                                    <div className="bg-surface-container-low border border-outline-variant/50 rounded-xl p-5">
+                                        <div className="flex gap-3 items-start">
+                                            <span className="material-symbols-outlined text-secondary">info</span>
+                                            <div>
+                                                <h3 className="text-sm font-bold text-on-surface mb-1">New Volunteers</h3>
+                                                <p className="text-xs text-on-surface-variant leading-relaxed">
+                                                    First-time users will be prompted to complete their profile with <b>Name, Department, and Year</b>.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            );
+        };
+
+        // --- Screen 5: Profile Pending ---
+        const ProfilePendingPage = () => {
+            const navigate = useNavigate();
+            const [saved, setSaved] = useState(false);
+
+            return (
+                <div className="bg-surface text-on-surface min-h-screen flex flex-col">
+                    <TopAppBar showBack />
+                    <main className="flex-grow pt-24 pb-12 px-container-margin max-w-lg mx-auto w-full">
+                        <div className="text-center mb-10">
+                            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-fixed rounded-full mb-6">
+                                <span className="material-symbols-outlined text-[40px] text-primary">verified_user</span>
+                            </div>
+                            <h2 className="text-2xl font-bold text-on-surface mb-3">Awaiting approval.</h2>
+                            <p className="text-sm text-on-surface-variant leading-relaxed">The Executive Committee (Execom) is verifying your details to ensure the integrity of our volunteer base.</p>
+                        </div>
+
+                        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 mb-8 shadow-sm">
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-xs font-bold uppercase text-on-surface-variant">Status</span>
+                                <span className="flex items-center gap-2 text-xs font-bold text-secondary bg-secondary-container/10 px-3 py-1 rounded-full border border-secondary/20">
+                                    <span className="w-2 h-2 bg-secondary rounded-full status-pulse"></span>
+                                    PENDING
+                                </span>
+                            </div>
+                            <div className="relative flex flex-col gap-6">
+                                <div className="flex gap-4">
+                                    <div className="flex flex-col items-center"><div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white"><span className="material-symbols-outlined text-sm">check</span></div><div className="w-0.5 h-full bg-primary"></div></div>
+                                    <div className="pb-6"><h4 className="text-sm font-bold text-on-surface">Sign-in Successful</h4><p className="text-xs text-on-surface-variant">Authenticated via Google.</p></div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <div className="flex flex-col items-center"><div className="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center text-primary bg-surface"><span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>hourglass_top</span></div><div className="w-0.5 h-full bg-outline-variant border-dashed border-l"></div></div>
+                                    <div className="pb-6"><h4 className="text-sm font-bold text-on-surface">Verification</h4><p className="text-xs text-on-surface-variant">Being reviewed by department head.</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h3 className="text-xs font-bold uppercase text-on-surface-variant px-1">Submitted Information</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="col-span-2 bg-white/80 backdrop-blur p-5 rounded-xl border border-outline-variant">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center text-primary"><span className="material-symbols-outlined">person</span></div>
+                                        <div><p className="text-xs text-on-surface-variant">Full Name</p><p className="font-bold text-on-surface">Arjun Sivakumar</p></div>
+                                    </div>
+                                </div>
+                                <div className="bg-white/80 backdrop-blur p-5 rounded-xl border border-outline-variant">
+                                    <p className="text-xs text-on-surface-variant">Department</p><p className="font-bold text-on-surface">Computer Science</p>
+                                </div>
+                                <div className="bg-white/80 backdrop-blur p-5 rounded-xl border border-outline-variant">
+                                    <p className="text-xs text-on-surface-variant">Year</p><p className="font-bold text-on-surface">3rd Year (Junior)</p>
+                                </div>
+                            </div>
+                            <div className="mt-8">
+                                <button 
+                                    onClick={() => setSaved(!saved)}
+                                    className={`w-full ${saved ? 'bg-tertiary' : 'bg-primary'} text-on-primary font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2`}
+                                >
+                                    <span>{saved ? 'Preference Saved' : 'Notify me via Email'}</span>
+                                    <span className="material-symbols-outlined text-xl">{saved ? 'check_circle' : 'notifications_active'}</span>
+                                </button>
+                                <button onClick={() => navigate('/login')} className="w-full mt-4 bg-transparent border border-outline text-on-surface-variant font-bold py-3 rounded-xl hover:bg-surface-container-low transition-colors">
+                                    Log Out
+                                </button>
+                            </div>
+                        </div>
+                    </main>
+                    <BottomNavBar activeTab="profile" />
+                </div>
+            );
+        };
+
+        // --- Screen 6: Event Details ---
+        const EventDetailsPage = () => {
+            const [joined, setJoined] = useState(false);
+            const copyWhatsapp = () => {
+                navigator.clipboard.writeText("*Sunrise Yoga for Mental Clarity*\nParticipants: 1. Kiran, 2. Ananya, 3. Rohan, 4. Priya");
+                alert("Copied to clipboard!");
+            };
+
+            return (
+                <div className="bg-background text-on-background min-h-screen pb-32">
+                    <TopAppBar showBack />
+                    <main className="mt-16 px-container-margin py-8 max-w-4xl mx-auto">
+                        <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-8 shadow-soft border border-outline-variant/30">
+                            <div className="w-full h-full bg-primary-container flex flex-col items-center justify-center gap-4 text-on-primary-container">
+                                <span className="material-symbols-outlined text-6xl opacity-40">volunteer_activism</span>
+                                <span className="text-xs uppercase tracking-widest opacity-60">NSS Event Banner</span>
+                            </div>
+                            <div className="absolute top-4 right-4">
+                                <span className="bg-primary text-on-primary px-3 py-1 rounded text-xs font-bold uppercase shadow-lg">Active</span>
+                            </div>
+                        </div>
+
+                        <section className="mb-10">
+                            <h2 className="text-3xl font-bold text-primary mb-2">Sunrise Yoga for Mental Clarity</h2>
+                            <div className="flex flex-wrap gap-4 text-on-surface-variant text-sm mb-4">
+                                <div className="flex items-center gap-1"><span className="material-symbols-outlined text-base">calendar_today</span><span>Oct 24, 2023 • 06:30 AM</span></div>
+                                <div className="flex items-center gap-1"><span className="material-symbols-outlined text-base">location_on</span><span>Central Lawn, North Campus</span></div>
+                            </div>
+                            <div className="flex items-center gap-1 text-secondary font-bold text-sm mb-6">
+                                <span className="material-symbols-outlined text-base">timer</span>
+                                <span>Registration Closes: Oct 23, 2023 • 11:59 PM</span>
+                            </div>
+                            <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl shadow-soft">
+                                <h3 className="text-xs font-bold text-primary mb-3 uppercase tracking-wider border-b border-outline-variant pb-2">Description</h3>
+                                <p className="text-sm text-on-surface leading-relaxed">
+                                    Join Unit 185 for an invigorating morning yoga session led by certified instructors. This event focuses on volunteer wellbeing and stress management. Attendance counts towards 2 hours of social service credit.
+                                </p>
+                            </div>
+                        </section>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                            <div className="space-y-6">
+                                <div className="bg-primary-container text-white p-6 rounded-xl shadow-soft">
+                                    <h4 className="text-xs font-bold uppercase opacity-80 mb-1">Live Viewers</h4>
+                                    <p className="text-2xl font-bold">42 <span className="text-xs opacity-60">browsing</span></p>
+                                </div>
+                                <div className="bg-surface-container-low border border-outline-variant p-6 rounded-xl">
+                                    <h4 className="text-xs font-bold uppercase text-on-surface-variant mb-4">Admin Tools</h4>
+                                    <button onClick={copyWhatsapp} className="w-full flex items-center justify-center gap-2 bg-on-tertiary-fixed text-white py-3 rounded-lg text-xs font-bold hover:bg-tertiary-container transition-colors">
+                                        <span className="material-symbols-outlined text-base">content_copy</span>
+                                        WhatsApp Format
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="md:col-span-2">
+                                <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-soft overflow-hidden">
+                                    <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+                                        <h3 className="text-xs font-bold text-primary uppercase">Participant List</h3>
+                                        <span className="bg-secondary text-on-secondary px-2 py-0.5 rounded-full text-[10px] font-bold">{joined ? '13/30' : '12/30'} Filled</span>
+                                    </div>
+                                    <ul className="divide-y divide-outline-variant/30">
+                                        {['Kiran Deshmukh', 'Ananya Sharma', 'Rohan Verma', 'Priya Iyer'].map((name, i) => (
+                                            <li key={i} className="px-6 py-4 flex items-center gap-4 hover:bg-surface-container transition-colors">
+                                                <span className="text-xs text-on-surface-variant w-6 text-right">{i+1}.</span>
+                                                <div className="flex-grow"><p className="text-sm font-bold text-on-surface">{name}</p><p className="text-[10px] text-on-surface-variant">Volunteer</p></div>
+                                                <span className="material-symbols-outlined text-outline-variant">check_circle</span>
+                                            </li>
+                                        ))}
+                                        {joined && (
+                                            <li className="px-6 py-4 flex items-center gap-4 bg-primary/5 transition-colors">
+                                                <span className="text-xs text-on-surface-variant w-6 text-right">5.</span>
+                                                <div className="flex-grow"><p className="text-sm font-bold text-primary">You (Member)</p><p className="text-[10px] text-on-surface-variant">Just joined</p></div>
+                                                <span className="material-symbols-outlined text-secondary" style={{fontVariationSettings: "'FILL' 1"}}>favorite</span>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <footer className="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md border-t border-outline-variant p-4 z-50 flex gap-4">
+                        <button 
+                            onClick={() => setJoined(!joined)}
+                            className={`flex-grow ${joined ? 'bg-outline opacity-80' : 'bg-secondary'} text-on-secondary h-14 rounded-xl font-bold uppercase tracking-widest shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2`}
+                        >
+                            <span className="material-symbols-outlined">{joined ? 'person_remove' : 'person_add'}</span>
+                            <span>{joined ? 'Leave Event' : 'Join Event'}</span>
+                        </button>
+                    </footer>
+                </div>
+            );
+        };
+
+        // --- Main App & Routing ---
+        const App = () => {
+            return (
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/create" element={<CreateListingPage />} />
+                    <Route path="/profile-pending" element={<ProfilePendingPage />} />
+                    <Route path="/event/:id" element={<EventDetailsPage />} />
+                </Routes>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+    </script>
+</body>
+</html>

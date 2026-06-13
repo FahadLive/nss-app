@@ -1,0 +1,16 @@
+{
+  "name": "NSS Unit 185",
+  "short_name": "NSS 185",
+  "description": "Not Me, But You. Volunteer Management Portal for NSS Unit 185.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f9ff",
+  "theme_color": "#00286d",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
