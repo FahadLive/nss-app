@@ -18,7 +18,7 @@ export default function TopAppBar({
   const router = useRouter();
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-surface shadow-sm flex justify-between items-center h-16 px-container-margin">
+    <header className="fixed top-0 left-0 w-full z-50 bg-surface shadow-sm flex justify-between items-center h-16 px-5">
       <div className="flex items-center gap-3">
         {showBack && (
           <button

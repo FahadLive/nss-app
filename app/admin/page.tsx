@@ -49,7 +49,7 @@ export default async function AdminPage() {
     return (
         <div className="min-h-screen bg-background pb-24 md:pb-0 pt-16">
             <TopAppBar title="Admin Panel" isAdmin />
-            <main className="max-w-7xl mx-auto px-container-margin py-8">
+            <main className="max-w-7xl mx-auto px-5 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                     <div className="md:col-span-2 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant card-shadow flex flex-col justify-between relative overflow-hidden">
                         <div className="relative z-10">

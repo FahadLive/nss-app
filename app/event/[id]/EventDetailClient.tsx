@@ -65,7 +65,7 @@ export default function EventDetailClient({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
       <div className="space-y-6">
-        <div className="bg-primary-container text-white p-6 rounded-xl shadow-soft">
+        <div className="bg-primary-container text-white p-6 rounded-xl shadow-md">
           <h4 className="text-xs font-bold uppercase opacity-80 mb-1">
             Registered
           </h4>
@@ -89,7 +89,7 @@ export default function EventDetailClient({
         </div>
       </div>
       <div className="md:col-span-2">
-        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-soft overflow-hidden">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-md overflow-hidden">
           <div className="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
             <h3 className="text-xs font-bold text-primary uppercase">
               Participant List

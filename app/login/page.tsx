@@ -21,7 +21,7 @@ export default function LoginPage() {
 
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col">
-      <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 px-container-margin h-16 flex items-center justify-between">
+      <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 px-5 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="material-symbols-outlined text-primary text-[28px]">
             account_balance

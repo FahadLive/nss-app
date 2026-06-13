@@ -42,7 +42,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen">
       <TopAppBar />
-      <main className="pt-20 pb-24 px-container-margin max-w-5xl mx-auto">
+      <main className="pt-20 pb-24 px-5 max-w-5xl mx-auto">
         <section className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold text-on-surface">

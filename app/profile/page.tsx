@@ -23,7 +23,7 @@ export default async function ProfilePage() {
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col">
       <TopAppBar showBack />
-      <main className="flex-grow pt-24 pb-12 px-container-margin max-w-lg mx-auto w-full">
+      <main className="flex-grow pt-24 pb-12 px-5 max-w-lg mx-auto w-full">
         {profile?.approval_status === "pending" && (
           <>
             <div className="text-center mb-10">

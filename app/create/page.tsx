@@ -71,7 +71,7 @@ export default function CreateListingPage() {
   return (
     <div className="bg-surface min-h-screen pb-24">
       <TopAppBar title="Create Listing" showBack />
-      <main className="px-container-margin py-20 max-w-xl mx-auto">
+      <main className="px-5 py-20 max-w-xl mx-auto">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-2">
             <label

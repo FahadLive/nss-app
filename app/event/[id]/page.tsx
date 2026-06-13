@@ -41,8 +41,8 @@ export default async function EventDetailPage({
   return (
     <div className="bg-background text-on-background min-h-screen pb-32">
       <TopAppBar showBack />
-      <main className="mt-16 px-container-margin py-8 max-w-4xl mx-auto">
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-8 shadow-soft border border-outline-variant/30">
+      <main className="mt-16 px-5 py-8 max-w-4xl mx-auto">
+        <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-8 shadow-md border border-outline-variant/30">
           {event.image_url ? (
             <img
               className="w-full h-full object-cover"
@@ -113,7 +113,7 @@ export default async function EventDetailPage({
               </span>
             </div>
           )}
-          <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl shadow-soft">
+          <div className="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl shadow-md">
             <h3 className="text-xs font-bold text-primary mb-3 uppercase tracking-wider border-b border-outline-variant pb-2">
               Description
             </h3>
