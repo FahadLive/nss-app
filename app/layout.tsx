@@ -16,11 +16,33 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-    title: "NSS Unit 185 - Volunteer Management Portal",
+    title: {
+        default: "NSS Unit 185 — Volunteer Management Portal",
+        template: "%s | NSS Unit 185",
+    },
     description:
         "Not Me, But You. Empowering youth through community service since 1969.",
     manifest: "/manifest.json",
-    icons: { icon: "/favicon.ico" },
+    metadataBase: new URL("https://nss-gecp.netlify.app/"),
+    icons: {
+        icon: "/favicon.ico",
+        apple: [
+            { url: "/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" },
+            { url: "/web-app-manifest-512x512.png", sizes: "512x512", type: "image/png" },
+        ],
+    },
+    openGraph: {
+        title: "NSS Unit 185 — Volunteer Management Portal",
+        description:
+            "Not Me, But You. Empowering youth through community service since 1969.",
+        url: "https://nss-gecp.netlify.app/",
+        siteName: "NSS Unit 185",
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+    },
 };
 
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -41,6 +63,12 @@ export default function RootLayout({
                 <link
                     rel="stylesheet"
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+                />
+                <meta name="apple-mobile-web-app-title" content="NSS GECP" />
+                <link
+                    rel="apple-touch-icon"
+                    sizes="192x192"
+                    href="/web-app-manifest-192x192.png"
                 />
             </head>
             <body className="min-h-dvh flex flex-col bg-surface text-on-surface pb-12">
