@@ -11,7 +11,7 @@ CREATE TABLE public.profiles (
   id              uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email           text,
   full_name       text,
-  department      text CHECK (department IN ('CSE','ECE','MECH','CIVIL','EEE','OTHER')),
+  department      text CHECK (department IN ('Computer Science and Engineering (CSE)','Electronics and Communication Engineering (ECE)','Information Technology (IT)','Mechanical Engineering (ME)','Electrical and Electronics Engineering (EEE)','Civil Engineering')),
   year            text CHECK (year IN ('Year 1','Year 2','Year 3','Year 4')),
   avatar_url      text,
   role            text NOT NULL DEFAULT 'volunteer'

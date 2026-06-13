@@ -17,6 +17,16 @@ export default async function HomePage() {
     redirect("/login");
   }
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("department")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile?.department) {
+    redirect("/setup-profile");
+  }
+
   const { data: activeEvents } = await supabase
     .from("events")
     .select("*, registrations:registrations(count)")
