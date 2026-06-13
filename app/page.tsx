@@ -17,15 +17,19 @@ export default async function HomePage() {
         redirect("/login");
     }
 
-    const { data: profile } = await supabase
-        .from("profiles")
-        .select("department")
-        .eq("id", user.id)
-        .single();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("department, role, approval_status")
+    .eq("id", user.id)
+    .single();
 
-    if (!profile?.department) {
-        redirect("/setup-profile");
-    }
+  if (!profile?.department) {
+    redirect("/setup-profile");
+  }
+
+  if (profile.approval_status !== "approved") {
+    redirect("/profile");
+  }
 
     const { data: activeEvents } = await supabase
         .from("events")
@@ -119,7 +123,7 @@ export default async function HomePage() {
                     </div>
                 </section>
             </main>
-            <BottomNavBar activeTab="home" />
+            <BottomNavBar activeTab="home" isAdmin={profile.role === "admin" || profile.role === "execom"} />
         </div>
     );
 }

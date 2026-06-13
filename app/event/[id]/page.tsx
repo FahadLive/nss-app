@@ -18,6 +18,16 @@ export default async function EventDetailPage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("approval_status")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.approval_status !== "approved") {
+    redirect("/profile");
+  }
+
   const { data: event } = await supabase
     .from("events")
     .select("*, registrations:registrations(count)")

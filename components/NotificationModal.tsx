@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { useNotif } from "@/components/NotifContext";
 
 const DISMISS_KEY = "notification_modal_dismissed_at";
 const DISMISS_DAYS = 7;
 
 export default function NotificationModal() {
   const [visible, setVisible] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { subscribed, setSubscribed } = useNotif();
 
   useEffect(() => {
     const check = async () => {
@@ -41,7 +42,13 @@ export default function NotificationModal() {
     };
 
     check();
-  }, []);
+
+    const onOpen = () => {
+      setVisible(true);
+    };
+    window.addEventListener("open-notification-modal", onOpen);
+    return () => window.removeEventListener("open-notification-modal", onOpen);
+  }, [setSubscribed]);
 
   const subscribe = async () => {
     setLoading(true);
@@ -89,7 +96,7 @@ export default function NotificationModal() {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={dismiss}
+        onClick={() => setVisible(false)}
       />
       <div className="relative bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-2xl p-8 max-w-sm w-full animate-in fade-in zoom-in-95">
         <div className="text-center">

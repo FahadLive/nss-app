@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import NotificationModal from "@/components/NotificationModal";
+import { NotifProvider } from "@/components/NotifContext";
 
 export default function RootLayout({
     children,
@@ -42,11 +43,13 @@ export default function RootLayout({
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
                 />
             </head>
-            <body className="min-h-dvh flex flex-col bg-surface text-on-surface">
-                <ServiceWorkerRegister />
-                <NotificationModal />
-                {children}
-                <Toaster richColors />
+            <body className="min-h-dvh flex flex-col bg-surface text-on-surface pb-12">
+                <NotifProvider>
+                    <ServiceWorkerRegister />
+                    <NotificationModal />
+                    {children}
+                    <Toaster richColors />
+                </NotifProvider>
             </body>
         </html>
     );

@@ -109,7 +109,7 @@ export default async function AdminPage() {
                     allEvents={allEvents ?? []}
                 />
             </main>
-            <BottomNavBar activeTab="admin" />
+            <BottomNavBar activeTab="admin" isAdmin={true} />
         </div>
     );
 }
