@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
@@ -23,16 +24,21 @@ export default function LoginPage() {
         <div className=" min-h-screen flex flex-col">
             <main className="flex-grow flex flex-col md:flex-row justify-center">
                 <section className="relative w-full md:w-1/2 min-h-[353px] md:min-h-0 flex items-center justify-center overflow-hidden p-12">
-                    <div className="text-center z-10">
-                        <h1 className="text-5xl font-bold mb-4">
-                            NSS GEC Palakkad
-                        </h1>
-                        <p className="text-xl opacity-80">NSS Unit 185</p>
-                        <img
-                            className="absolute inset-0 w-full h-full object-cover opacity-10"
-                            src="/nss-fam.png"
-                            alt="NSS background"
-                        />
+                    <Image
+                        src="/nss-fam.jpg"
+                        alt="NSS background"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover opacity-10"
+                        priority
+                    />
+                    <div className="relative text-center">
+                        <div className="relative z-10">
+                            <h1 className="text-5xl font-bold mb-4">
+                                NSS GEC Palakkad
+                            </h1>
+                            <p className="text-xl opacity-80">NSS Unit 185</p>
+                        </div>
                     </div>
                 </section>
                 <section className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-12 bg-white">
